@@ -32,8 +32,15 @@ class UserController extends Controller
     {
         return view('users.create');
     }
-    public function store()
+    // Request $request = $request = new Request;
+    public function store(Request $request)
     {
-        dd('cadastrando o usuario');
+        // receber todos os dados do formulário
+        // dd($request->all());
+        $data = $request->all();
+        $data['password'] = bcrypt($request->password);
+        User::create($data);
+        // retornar para rota de usuarios
+        return redirect()->route('users.index');
     }
 }
