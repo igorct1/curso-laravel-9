@@ -19,7 +19,13 @@ class UserController extends Controller
     }
     public function show($id)
     {
-        dd($id);
-        // return view('users.show');
+        // listar usuario baseado no id recebido pelo método get
+        // $user = User::where('id', $id)->first();
+        // outra forma de recuperar usuario
+        // se não existir nenhum usuario com esse ID, retornar para a /users (listagem dos usuarios)
+        if(!$user = User::find($id))
+            // retorna para a rota de usuarios
+            return redirect()->route('users.index');
+        return view('users.show', compact('user'));
     }
 }
