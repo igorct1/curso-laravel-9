@@ -8,12 +8,17 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // listar registros do banco de dados, é possivel utilizar
         // User::all() ou User::get();
-        $users = User::get();
-        
+        $search = $request->search;
+        $users = User::where(function ($query) use ($search) {
+            if($search) {
+                $query->where('email', $search);
+                $query->orWhere('name', 'LIKE', "%{$search}%");
+            }
+        })->get();
         return view('users.index', compact('users')); // compact cria um array de $users
         // debugger
         // dd('UserController@index');
