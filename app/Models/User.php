@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\StoreUpdateUserFormRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -41,4 +42,34 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function getUsers (string | null $search = '')
+    {
+        $users = $this->where(function ($query) use ($search) {
+            if($search) {
+                $query->where('email', $search);
+                $query->orWhere('name', 'LIKE', "%{$search}%");
+            }
+        })->get();
+        return $users;
+    }
+
+    public function storeUser($request = null)
+    {   
+        $data = $request->all();
+        $data['password'] = bcrypt($request->password);
+        $this->create($data);
+    }
+    public function userUpdate($request, $id)
+    {
+        // se não existir o id solicitado
+        if(!$user = $this->find($id))
+        // retorna para a rota de usuarios
+            return redirect()->route('users.index');
+        //se existir
+        //atualizar todos os dados do usuario
+        $data = $request->only('name', 'email');
+        if($request->password)
+            $data['password'] = bcrypt($request->password);
+        $user->update($data);
+    }
 }

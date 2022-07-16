@@ -8,17 +8,22 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    protected $model;
+
+    public function __construct(User $user)
+    {
+        $this->model = $user;
+    }
     public function index(Request $request)
     {
         // listar registros do banco de dados, é possivel utilizar
-        // User::all() ou User::get();
+        // $this->model->all() ou $this->model->get();
         $search = $request->search;
-        $users = User::where(function ($query) use ($search) {
-            if($search) {
-                $query->where('email', $search);
-                $query->orWhere('name', 'LIKE', "%{$search}%");
-            }
-        })->get();
+        //utilizando parametro dinamico, php8+
+        $users = $this->model->
+                        getUsers(
+                            search: $request->get('search', '')
+                        );
         return view('users.index', compact('users')); // compact cria um array de $users
         // debugger
         // dd('UserController@index');
@@ -26,10 +31,10 @@ class UserController extends Controller
     public function show($id)
     {
         // listar usuario baseado no id recebido pelo método get
-        // $user = User::where('id', $id)->first();
+        // $user = $this->model->where('id', $id)->first();
         // outra forma de recuperar usuario
         // se não existir nenhum usuario com esse ID, retornar para a /users (listagem dos usuarios)
-        if(!$user = User::find($id))
+        if(!$user = $this->model->find($id))
             // retorna para a rota de usuarios
             return redirect()->route('users.index');
         return view('users.show', compact('user'));
@@ -43,15 +48,16 @@ class UserController extends Controller
     {
         // receber todos os dados do formulário
         // dd($request->all());
-        $data = $request->all();
-        $data['password'] = bcrypt($request->password);
-        User::create($data);
+        $this->model->storeUser($request);
+        // $data = $request->all();
+        // $data['password'] = bcrypt($request->password);
+        // $this->model->create($data);
         // retornar para rota de usuarios
         return redirect()->route('users.index');
     }
     public function edit($id)
     {
-        if(!$user = User::find($id))
+        if(!$user = $this->model->find($id))
         // retorna para a rota de usuarios
             return redirect()->route('users.index');
 
@@ -60,21 +66,21 @@ class UserController extends Controller
 
     public function update(StoreUpdateUserFormRequest $request, $id)
     {
-        if(!$user = User::find($id))
-        // retorna para a rota de usuarios
-            return redirect()->route('users.index');
+        // if(!$user = $this->model->find($id))
+        // // retorna para a rota de usuarios
+        //     return redirect()->route('users.index');
         
-        //atualizar todos os dados do usuario
-        $data = $request->only('name', 'email');
-        if($request->password)
-            $data['password'] = bcrypt($request->password);
-        $user->update($data);
-
+        // //atualizar todos os dados do usuario
+        // $data = $request->only('name', 'email');
+        // if($request->password)
+        //     $data['password'] = bcrypt($request->password);
+        // $user->update($data);
+        $this->model->userUpdate($request, $id);
         return redirect()->route('users.index');
     }
     public function destroy($id)
     {
-        if(!$user = User::find($id))
+        if(!$user = $this->model->find($id))
         // retorna para a rota de usuarios
             return redirect()->route('users.index');
         $user->delete();
