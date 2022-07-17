@@ -69,7 +69,6 @@ class UserController extends Controller
         // if(!$user = $this->model->find($id))
         // // retorna para a rota de usuarios
         //     return redirect()->route('users.index');
-        
         // //atualizar todos os dados do usuario
         // $data = $request->only('name', 'email');
         // if($request->password)

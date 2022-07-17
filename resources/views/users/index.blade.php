@@ -4,19 +4,35 @@
 @section('title', 'Listagem dos usuários')
 @section('content')
 <h1>Listagem dos usuários
-    (<a href="{{ route('users.create') }}">+</a>)
+    <a class="btn btn-outline-dark btn-sm px-3"href="{{ route('users.create') }}">+</a>
 </h1>
-<form action="{{ route('users.index') }}" method="get">
-    <input type="text" name="search" placeholder="Usuario">
-    <button type="submit">Pesquisar</button>
+<form action="{{ route('users.index') }}" method="get" class="row container">
+    <input type="text" name="search" placeholder="Usuario" class="form-control col">
+    <button type="submit" class="btn btn-primary col-md-2 ms-1">Pesquisar</button>
 </form>
-<ul>
-    @foreach ($users as $user)
-        <li>{{ $user->name }} -
-            {{ $user->email }} |
-            <a href="{{ route('users.edit', $user->id) }}">Editar</a>
-            <a href="{{ route('users.show', $user->id) }}">Detalhes</a>
-        </li>
-    @endforeach
-</ul>
+<table class="table table-striped mt-4">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Editar</th>
+            <th>Detalhes</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($users as $user)
+        <tr>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+            <td>
+                <a class="btn btn-warning"href="{{ route('users.edit', $user->id) }}">Editar</a>
+            </td>
+            <td>
+                <a class="btn btn-info"href="{{ route('users.show', $user->id) }}">Detalhes</a>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 @endsection
