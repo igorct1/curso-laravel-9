@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'image',
     ];
 
     /**
@@ -50,14 +52,21 @@ class User extends Authenticatable
                 $query->orWhere('name', 'LIKE', "%{$search}%");
             }
         })->with(['comments'])
-        ->paginate(1);
+        ->paginate(15);
         return $users;
     }
 
-    public function storeUser($request = null)
+    public function storeUser($request)
     {   
         $data = $request->all();
         $data['password'] = bcrypt($request->password);
+        // pegar extensão do arquivo
+        // $extension = $request->image->getClientOriginalExtension();
+        //renomear imagem
+        // $data['image']= $request->image->storeAs('users', now().".{$extension}");
+        if($request->image){
+            $data['image']= $request->image->store('users');
+        }
         $this->create($data);
     }
     public function userUpdate($request, $id)
@@ -71,6 +80,13 @@ class User extends Authenticatable
         $data = $request->only('name', 'email');
         if($request->password)
             $data['password'] = bcrypt($request->password);
+
+        if($request->image) {
+            if($user->image && Storage::exists($user->image)) {
+                Storage::delete($user->image);
+            }
+            $data['image'] = $request->image->store('users');
+        }   
         $user->update($data);
     }
 

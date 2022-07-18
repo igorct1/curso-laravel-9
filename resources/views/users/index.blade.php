@@ -13,6 +13,7 @@
 <table class="table table-striped mt-4">
     <thead>
         <tr>
+            <th>Foto</th>
             <th>Nome</th>
             <th>Email</th>
             <th>Editar</th>
@@ -23,6 +24,16 @@
     <tbody>
         @foreach ($users as $user)
         <tr>
+            <td>
+                @if ($user->image)
+                    <img src="{{ url("storage/{$user->image}") }}" alt="{{ $user->name }}"
+                        style="width:100px"
+                    >
+                @else
+                <img src="{{ url('images/favicon.ico.png') }}" alt="{{ $user->name }}">
+
+                @endif
+            </td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>
