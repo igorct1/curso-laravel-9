@@ -24,7 +24,7 @@
             <td>{{ $comment->body }}</td>
             <td>{{ $comment->visible ? 'Sim' : 'Não'}}</td>
             <td>
-                <a class="btn btn-warning"href="{{ route('users.edit', $user->id) }}">Editar</a>
+                <a class="btn btn-warning"href="{{ route('comments.edit',  ['user' => $user->id, 'id' => $comment->id]) }}">Editar</a>
             </td>
         </tr>
         @endforeach
