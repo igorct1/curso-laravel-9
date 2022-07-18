@@ -1,12 +1,12 @@
 {{-- receber template --}}
 @extends('layouts.app')
 {{-- title --}}
-@section('title', 'Listagem dos usuários')
+@section('title', 'Listagem dos comentários')
 @section('content')
 <h1>Comentários do usuário {{ $user->name }}
     <a class="btn btn-outline-dark btn-sm px-3"href="{{ route('comments.create', $user->id) }}">+</a>
 </h1>
-<form action="{{ route('users.index') }}" method="get" class="row container">
+<form action="{{ route('comments.index', $user->id) }}" method="get" class="row container">
     <input type="text" name="search" placeholder="Comentário" class="form-control col">
     <button type="submit" class="btn btn-primary col-md-2 ms-1">Pesquisar</button>
 </form>
