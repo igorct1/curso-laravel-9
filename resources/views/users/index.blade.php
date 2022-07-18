@@ -17,7 +17,7 @@
             <th>Email</th>
             <th>Editar</th>
             <th>Detalhes</th>   
-            <th>Comentários</th>
+            <th>Anotações</th>
         </tr>
     </thead>
     <tbody>
@@ -32,10 +32,15 @@
                 <a class="btn btn-info"href="{{ route('users.show', $user->id) }}">Detalhes</a>
             </td>
             <td>
-                <a class="btn btn-primary"href="{{ route('comments.index', $user->id) }}">Comentários</a>
+                <a class="btn btn-primary"href="{{ route('comments.index', $user->id) }}">Anotações ({{ $user->comments->count() }})</a>
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
+<div>
+    {{ $users->appends([
+        'search' => request()->get('search', '')
+    ])->links() }}
+</div>
 @endsection
