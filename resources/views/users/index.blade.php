@@ -30,7 +30,9 @@
                         style="width:100px"
                     >
                 @else
-                <img src="{{ url('images/favicon.ico.png') }}" alt="{{ $user->name }}">
+                    <img src="{{ url('images/favicon.ico.png') }}" alt="{{ $user->name }}"
+                        style="width:100px"
+                    >
 
                 @endif
             </td>

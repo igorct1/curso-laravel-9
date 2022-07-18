@@ -10,6 +10,10 @@
 </head>
 <body class="">
     <div class="container pt-5">
+        <form action="{{ route('logout') }}" method="post" class="text-end">
+            @csrf
+            <button class="btn btn-danger mb-3 "type="submit">Logout</button>
+        </form>
         @yield('content')
     </div>
 </body>
