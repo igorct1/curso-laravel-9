@@ -16,8 +16,8 @@
             <th>Nome</th>
             <th>Email</th>
             <th>Editar</th>
-            <th>Detalhes</th>
-
+            <th>Detalhes</th>   
+            <th>Comentários</th>
         </tr>
     </thead>
     <tbody>
@@ -30,6 +30,9 @@
             </td>
             <td>
                 <a class="btn btn-info"href="{{ route('users.show', $user->id) }}">Detalhes</a>
+            </td>
+            <td>
+                <a class="btn btn-primary"href="{{ route('comments.index', $user->id) }}">Comentários</a>
             </td>
         </tr>
         @endforeach
